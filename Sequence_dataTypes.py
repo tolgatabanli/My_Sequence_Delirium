@@ -136,3 +136,24 @@ class ProtSeq:
         for k in helixseq:
             helixhydropathy += aminoacid_hydropathy[k]
         return helixhydropathy
+
+    def helix_number(self, threshold=4):
+        helixed_order = self.helical_wheel()
+        helixcount = 0
+        window_cont = False
+        window_break = 0
+        for k in range(len(helixed_order)):
+            a = helixed_order[k:k+threshold]
+            if a == "P"*threshold or a == "H"*threshold:
+                if window_cont:
+                    window_cont = True
+                else:
+                    helixcount += 1
+                    window_cont = True
+            else:
+                if window_break <= 4:
+                    window_break += 1
+                else:
+                    window_cont = False
+                    continue
+        return helixcount
