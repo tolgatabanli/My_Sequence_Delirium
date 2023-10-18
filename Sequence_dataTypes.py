@@ -153,3 +153,23 @@ class ProtSeq:
             else:
                 window_cont = True
         return helixcount
+
+    def hydropathy_familiarity(self):
+        helixed_order = self.helical_wheel()
+        helixed_order = helixed_order[-4:]+helixed_order+helixed_order[:4]
+        hydro_index = []
+        for k in range(len(helixed_order)):
+            letter_score = 0.0
+            for n in range(1, 5): # the window extends up until 4 amino acids both sides, a frame of total 9 (18/2)
+                window = helixed_order[k-n:k] + helixed_order[k+1:k+1+n]
+                for a in window:
+                    if a == helixed_order[k]:
+                        letter_score += 1/(2*n)*8/(2**(n-1))/15
+                    elif a == "M":
+                        letter_score += 0.5/(2*n)*8/(2**(n-1))/15
+                    else:
+                        continue
+            hydro_index.append(letter_score)
+        del hydro_index[:4]
+        del hydro_index[-4:]
+        return hydro_index
