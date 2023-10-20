@@ -29,7 +29,16 @@ elif int(process) == 4:
     for k in range(reso):
         for score in mapdata:
             if score > 1/(reso+1)*(reso-k):
-                print("⬜", end="")
+                print("▀", sep="", end="")
             else:
-                print("⬛", end="")
+                print(" ", sep="", end="")
         print("")
+    for k in range(len(mapdata)):
+        if k%10 == 0:
+            print(k+1, sep="", end="")
+        else:
+            if k%10 <= len(str(k))-1:
+                continue
+            else:
+                print(" ", sep="", end="")
+    print("")

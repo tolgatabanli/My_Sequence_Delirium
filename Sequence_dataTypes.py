@@ -120,6 +120,13 @@ class ProtSeq:
     def __init__(self, seq):
         self.seq = seq
 
+    @staticmethod
+    def hydropathize(seq):
+        hydropathy = ""
+        for k in seq:
+            hydropathy += aminoacid_hydropathy[k]
+        return hydropathy
+
     def helical_wheel(self):
         order = [1, 12, 5, 16, 9, 2, 13, 6, 17, 10, 3, 14, 7, 18, 11, 4, 15, 8]
         helixseq = ""
@@ -132,10 +139,7 @@ class ProtSeq:
                     continue
             n += 1
         print(helixseq)
-        helixhydropathy = ""
-        for k in helixseq:
-            helixhydropathy += aminoacid_hydropathy[k]
-        return helixhydropathy
+        return self.hydropathize(helixseq)
 
     def helix_number(self, threshold=4):
         helixed_order = self.helical_wheel()
@@ -155,12 +159,12 @@ class ProtSeq:
         return helixcount
 
     def hydropathy_familiarity(self):
-        helixed_order = self.helical_wheel()
+        helixed_order = self.hydropathize(self.seq)
         helixed_order = helixed_order[-4:]+helixed_order+helixed_order[:4]
         hydro_index = []
         for k in range(len(helixed_order)):
             letter_score = 0.0
-            for n in range(1, 5): # the window extends up until 4 amino acids both sides, a frame of total 9 (18/2)
+            for n in range(1, 5):  # the window extends up until 4 amino acids both sides, a frame of total 9 (18/2)
                 window = helixed_order[k-n:k] + helixed_order[k+1:k+1+n]
                 for a in window:
                     if a == helixed_order[k]:
